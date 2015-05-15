@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		74F0B9CF1B05C0A300D35224 /* SquareButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F0B9CE1B05C0A300D35224 /* SquareButtons.swift */; };
 		74F11EC01B04DC6600AA3D55 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F11EBF1B04DC6600AA3D55 /* AppDelegate.swift */; };
 		74F11EC21B04DC6600AA3D55 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F11EC11B04DC6600AA3D55 /* ViewController.swift */; };
 		74F11EC51B04DC6600AA3D55 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74F11EC31B04DC6600AA3D55 /* Main.storyboard */; };
 		74F11EC71B04DC6600AA3D55 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74F11EC61B04DC6600AA3D55 /* Images.xcassets */; };
 		74F11ECA1B04DC6600AA3D55 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 74F11EC81B04DC6600AA3D55 /* LaunchScreen.xib */; };
 		74F11ED61B04DC6600AA3D55 /* MineSweeperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F11ED51B04DC6600AA3D55 /* MineSweeperTests.swift */; };
+		74F11EE01B04E0EC00AA3D55 /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F11EDF1B04E0EC00AA3D55 /* Square.swift */; };
+		74F11EE21B04E1F900AA3D55 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F11EE11B04E1F900AA3D55 /* Board.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		74F0B9CE1B05C0A300D35224 /* SquareButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SquareButtons.swift; path = ../SquareButtons.swift; sourceTree = "<group>"; };
 		74F11EBA1B04DC6600AA3D55 /* MineSweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MineSweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		74F11EBE1B04DC6600AA3D55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74F11EBF1B04DC6600AA3D55 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -36,6 +40,8 @@
 		74F11ECF1B04DC6600AA3D55 /* MineSweeperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MineSweeperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		74F11ED41B04DC6600AA3D55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74F11ED51B04DC6600AA3D55 /* MineSweeperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineSweeperTests.swift; sourceTree = "<group>"; };
+		74F11EDF1B04E0EC00AA3D55 /* Square.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
+		74F11EE11B04E1F900AA3D55 /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,9 +83,12 @@
 		74F11EBC1B04DC6600AA3D55 /* MineSweeper */ = {
 			isa = PBXGroup;
 			children = (
+				74F0B9CE1B05C0A300D35224 /* SquareButtons.swift */,
 				74F11EBF1B04DC6600AA3D55 /* AppDelegate.swift */,
 				74F11EC11B04DC6600AA3D55 /* ViewController.swift */,
 				74F11EC31B04DC6600AA3D55 /* Main.storyboard */,
+				74F11EDF1B04E0EC00AA3D55 /* Square.swift */,
+				74F11EE11B04E1F900AA3D55 /* Board.swift */,
 				74F11EC61B04DC6600AA3D55 /* Images.xcassets */,
 				74F11EC81B04DC6600AA3D55 /* LaunchScreen.xib */,
 				74F11EBD1B04DC6600AA3D55 /* Supporting Files */,
@@ -212,7 +221,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74F11EE01B04E0EC00AA3D55 /* Square.swift in Sources */,
 				74F11EC21B04DC6600AA3D55 /* ViewController.swift in Sources */,
+				74F0B9CF1B05C0A300D35224 /* SquareButtons.swift in Sources */,
+				74F11EE21B04E1F900AA3D55 /* Board.swift in Sources */,
 				74F11EC01B04DC6600AA3D55 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,6 +423,7 @@
 				74F11EDB1B04DC6600AA3D55 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		74F11EDC1B04DC6600AA3D55 /* Build configuration list for PBXNativeTarget "MineSweeperTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +432,7 @@
 				74F11EDE1B04DC6600AA3D55 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
