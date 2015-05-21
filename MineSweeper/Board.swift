@@ -48,7 +48,7 @@ class Board {
     
     func countMinedNeighbor(square: Square){
         var minedNeighborCount = 0
-        var neighborArr: [Square] = scanNeighbor(square)
+        var neighborArr: [Square] = scanNeighbor(square, mode: "Eight")
         for neighbor in neighborArr {
             if neighbor.isMine {
                 minedNeighborCount++
@@ -57,9 +57,14 @@ class Board {
         square.minedNeighborCount = minedNeighborCount
     }
 
-    func scanNeighbor(square: Square) -> [Square] { //scan for non-empty neighbors
-        var adjTiles = [(-1, -1), (0, -1), (-1, 0), (1, 1), (1, 0), (0, 1), (-1, 1), (1, -1)]
+    func scanNeighbor(square: Square, mode: String) -> [Square] { //scan for existent neighbors
+        var adjTiles: [(Int, Int)] = []
         var neighbors: [Square] = []
+        if (mode == "Eight") {
+            adjTiles = [(-1, -1), (0, -1), (-1, 0), (1, 1), (1, 0), (0, 1), (-1, 1), (1, -1)]
+        } else if (mode == "Four") {
+            adjTiles = [(1,0), (-1,0), (0,1), (0,-1)]
+        }
         for (rowOffset, columnOffset) in adjTiles {
             let optionalNeighbor:Square? = getTile(square.row+rowOffset, column: square.column+columnOffset)
             if let neighbor = optionalNeighbor {

@@ -94,18 +94,13 @@ class ViewController: UIViewController {
     }
     
     func emptyWhiteSpace(square: Square) {
-        var tileToCheck = [(1,0), (-1, 0), (0,1), (0,-1)]
         if (decideSquareButtonText(square) == "") {
             if (square.scannedEmpty == false) {
-                for (rowOffset, columnOffset) in tileToCheck {
-                    let optionalNeighbor:Square? = board.getTile(square.row+rowOffset, column: square.column+columnOffset)
-                    if let neighbor = optionalNeighbor {
-                        neighbor.isRevealed = true
-                        neighbor.scannedEmpty = true
-                        var buttonToEmpty: SquareButton = squareButtons[neighbor.row][neighbor.column]
-                        buttonToEmpty.setTitle("", forState: .Normal)
-                        emptyWhiteSpace(neighbor)
-                    }
+                var neighbors = board.scanNeighbor(square, mode: "Four")
+                for neighbor in neighbors {
+                    square.isRevealed = true
+                    square.scannedEmpty = true
+                    emptyWhiteSpace(neighbor)
                 }
             }
         } else {
@@ -123,6 +118,9 @@ class ViewController: UIViewController {
             alertView.message = "You tapped on a mine."
             alertView.show()
             alertView.delegate = self
+        } else {
+            sender.square.isRevealed = false
+            sender.square.scannedEmpty = false
         }
     }
     
