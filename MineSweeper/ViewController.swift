@@ -46,7 +46,7 @@ class ViewController: UIViewController {
                 let squareSize:CGFloat = self.boardView.frame.width / CGFloat(boardSize)
                 let squareButton = SquareButton(squareModel: square, squareSize: squareSize, squareMargin: 0)
                 squareButton.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
-                squareButton.addTarget(self, action: "squareButtonPressed:", forControlEvents: .TouchUpInside)
+                squareButton.addTarget(self, action: "squareButtonFingerPressed:", forControlEvents: .TouchUpInside)
                 self.boardView.addSubview(squareButton)
                 self.squareButtons.append(squareButton)
             }
@@ -67,8 +67,11 @@ class ViewController: UIViewController {
         secondCount = 0
         timeLabel.text = "Time: \(secondCount)"
         self.resetBoardView()
-        
-
+    }
+    
+    func squareButtonFingerPressed(sender: SquareButton) {
+        sender.fingerPressed = true
+        squareButtonPressed(sender)
     }
     
     func squareButtonPressed(sender: SquareButton) {
@@ -82,20 +85,45 @@ class ViewController: UIViewController {
         case "pressedAlredy":
             println(setText)
         case "M":
-            minePressed();
+            minePressed(sender);
         default:
             sender.setTitle(setText, forState: .Normal)
+            emptyWhiteSpace(sender.square)
+        }
+        
+    }
+    
+    func emptyWhiteSpace(square: Square) {
+        var tileToCheck = [(1,0), (-1, 0), (0,1), (0,-1)]
+        if (decideSquareButtonText(square) == "") {
+            if (square.scannedEmpty == false) {
+                for (rowOffset, columnOffset) in tileToCheck {
+                    let optionalNeighbor:Square? = board.getTile(square.row+rowOffset, column: square.column+columnOffset)
+                    if let neighbor = optionalNeighbor {
+                        neighbor.isRevealed = true
+                        neighbor.scannedEmpty = true
+                        var buttonToEmpty: SquareButton = squareButtons[neighbor.row][neighbor.column]
+                        buttonToEmpty.setTitle("", forState: .Normal)
+                        emptyWhiteSpace(neighbor)
+                    }
+                }
+            }
+        } else {
+            squareButtonPressed(squareButtons[square.row][square.column])
+            //what if one of the tiles at the edge is a mine?
         }
     }
     
-    func minePressed(){
-        self.endCurrentGame()
-        var alertView = UIAlertView()
-        alertView.addButtonWithTitle("New Game")
-        alertView.title = "OOPS."
-        alertView.message = "You tapped on a mine."
-        alertView.show()
-        alertView.delegate = self
+    func minePressed(sender: SquareButton) {
+        if (sender.fingerPressed == true) {
+            self.endCurrentGame()
+            var alertView = UIAlertView()
+            alertView.addButtonWithTitle("New Game")
+            alertView.title = "OOPS."
+            alertView.message = "You tapped on a mine."
+            alertView.show()
+            alertView.delegate = self
+        }
     }
     
     func alertView(View: UIAlertView!, clickedButtonAtIndex buttonIndex: Int) {
@@ -141,6 +169,10 @@ class ViewController: UIViewController {
         println("New Game.")
         self.uiStartNewGame()
 
+    }
+    
+    func massClear(){
+        
     }
 
 

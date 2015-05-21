@@ -14,6 +14,8 @@ class Square {
     var minedNeighborCount = 0
     var isMine = false
     var isRevealed = false
+    var scannedEmpty = false
+    var displayText = ""
     init(row: Int, column: Int){
         self.row = row
         self.column = column
