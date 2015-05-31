@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     var squareButtons:[SquareButton] = []
     var movesCount = 0
     var secondCount = 0
-    var firstMove = true
+    var numberOfMine = 0
     
     var oneSecondTimer:NSTimer?
     
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     
     func endCurrentGame() {
         if self.oneSecondTimer != nil {
-            self.oneSecondTimer!.invalidate()
+            self.oneSecondTimer?.invalidate()
             self.oneSecondTimer = nil
         }
     }
@@ -43,10 +43,11 @@ class ViewController: UIViewController {
         for row in 0 ..< board.size {
             for column in 0 ..< board.size {
                 let square = board.squares[row][column]
+                println("\(square.isRevealed)")
                 let squareSize:CGFloat = self.boardView.frame.width / CGFloat(boardSize)
                 let squareButton = SquareButton(squareModel: square, squareSize: squareSize, squareMargin: 0)
                 squareButton.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
-                squareButton.addTarget(self, action: "squareButtonFingerPressed:", forControlEvents: .TouchUpInside)
+                squareButton.addTarget(self, action: "squareButtonPressed:", forControlEvents: .TouchUpInside)
                 self.boardView.addSubview(squareButton)
                 self.squareButtons.append(squareButton)
             }
@@ -66,51 +67,86 @@ class ViewController: UIViewController {
         movesLabel.text = "Moves: \(movesCount)"
         secondCount = 0
         timeLabel.text = "Time: \(secondCount)"
+        numberOfMine = 0
         self.resetBoardView()
-    }
-    
-    func squareButtonFingerPressed(sender: SquareButton) {
-        sender.fingerPressed = true
-        squareButtonPressed(sender)
+        self.countNumberOfMine(squareButtons)
     }
     
     func squareButtonPressed(sender: SquareButton) {
-        if firstMove {
+        sender.fingerPressed = true
+        if sender.square.isPressed == false {
+            movesCount++
+            movesLabel.text = "Moves: \(movesCount)"
+            println(movesCount)
+            sender.square.isPressed = true
+        }
+        squareButtonTriggered(sender)
+        if (movesCount == 1) {
             self.oneSecondTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("oneSecond"), userInfo: nil, repeats: true)
-            firstMove = false
         }
-        println("Pressed row:\(sender.square.row), col:\(sender.square.column)")
-        var setText = decideSquareButtonText(sender.square)
-        switch setText {
-        case "pressedAlredy":
-            println(setText)
-        case "M":
-            minePressed(sender);
-        default:
-            sender.setTitle(setText, forState: .Normal)
-            emptyWhiteSpace(sender.square)
-        }
-        
     }
     
-    func emptyWhiteSpace(square: Square) {
-        if (decideSquareButtonText(square) == "") {
-            if (square.scannedEmpty == false) {
-                var neighbors = board.scanNeighbor(square, mode: "Four")
-                for neighbor in neighbors {
-                    square.isRevealed = true
-                    square.scannedEmpty = true
-                    emptyWhiteSpace(neighbor)
-                }
+    func countNumberOfMine(squareButtons: [SquareButton]) {
+        for i in squareButtons {
+            if decideSquareButtonText(i.square) == "M" {
+                numberOfMine++
             }
+        }
+    }
+//    
+//    func mineSafelyDiscovered(gestureRecognizer:UILongPressGestureRecognizer){
+//        
+//    }
+    
+    func checkAllRevealed(squareButtons: [SquareButton]) -> Bool {
+        var isRevealedCount = 0
+        for i in squareButtons {
+            if i.square.isRevealed == true {
+                isRevealedCount++
+            }
+        }
+        if isRevealedCount == (board.size*board.size - numberOfMine) {
+            return true
         } else {
-            squareButtonPressed(squareButtons[square.row][square.column])
-            //what if one of the tiles at the edge is a mine?
+            return false
+        }
+    }
+    
+    func squareButtonTriggered(sender: SquareButton) {
+        var setText = decideSquareButtonText(sender.square)
+        println("Pressed row:\(sender.square.row), col:\(sender.square.column)", "setText: '\(setText)'.")
+        sender.square.isRevealed = true
+        switch setText {
+        case "revealedAlready":
+            println("Pressed Already.")
+        case "M":
+            minePressed(sender);
+        case "":
+            sender.setTitle(setText, forState: .Normal)
+            openWhiteSpace(sender.square)
+        default:
+            sender.setTitle(setText, forState: .Normal)
+        }
+        var allRevealed = checkAllRevealed(squareButtons)
+        if allRevealed == true {
+            var gameCompletedAlert = UIAlertView()
+            gameCompletedAlert.addButtonWithTitle("New Game")
+            gameCompletedAlert.title = "Congratulations!"
+            gameCompletedAlert.message = "You've completed the game"
+            gameCompletedAlert.show()
+            gameCompletedAlert.delegate = self
+        }
+    }
+    
+    func openWhiteSpace(square: Square) {
+        var neighbors = board.scanNeighbor(square, mode: "Four")
+        for neighbor in neighbors {
+            squareButtonTriggered(squareButtons[neighbor.row * boardSize + neighbor.column])
         }
     }
     
     func minePressed(sender: SquareButton) {
-        if (sender.fingerPressed == true) {
+        if sender.fingerPressed {
             self.endCurrentGame()
             var alertView = UIAlertView()
             alertView.addButtonWithTitle("New Game")
@@ -120,7 +156,6 @@ class ViewController: UIViewController {
             alertView.delegate = self
         } else {
             sender.square.isRevealed = false
-            sender.square.scannedEmpty = false
         }
     }
     
@@ -132,11 +167,8 @@ class ViewController: UIViewController {
     func decideSquareButtonText(square: Square) -> String {
         var returnText = ""
         if square.isRevealed {
-            returnText = "pressedAlready"
+            returnText = "revealedAlready"
         } else {
-            movesCount++
-            movesLabel.text = "Moves: \(movesCount)"
-            square.isRevealed = true;
             if square.isMine {
                 returnText = "M"
             } else {
@@ -166,13 +198,6 @@ class ViewController: UIViewController {
         self.endCurrentGame()
         println("New Game.")
         self.uiStartNewGame()
-
     }
-    
-    func massClear(){
-        
-    }
-
-
 }
 

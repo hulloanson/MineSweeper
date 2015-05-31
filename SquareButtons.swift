@@ -14,6 +14,7 @@ class SquareButton : UIButton {
     let squareMargin:CGFloat
     var square:Square
     var fingerPressed = false
+    var safeDiscover = false
     init(squareModel:Square, squareSize:CGFloat, squareMargin:CGFloat) {
         self.square = squareModel
         self.squareSize = squareSize

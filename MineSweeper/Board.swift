@@ -32,7 +32,6 @@ class Board {
             for column in 0 ..< size {
                 squares[row][column].isRevealed = false
                 setMine(squares[row][column])
-
             }
         }
         for row in 0 ..< size {
@@ -43,7 +42,8 @@ class Board {
     }
         
     func setMine(square: Square) {
-        square.isMine = ((arc4random()%10) == 0)
+        var minedFactor = arc4random()%(100/15)
+        square.isMine = minedFactor == 0
     }
     
     func countMinedNeighbor(square: Square){
@@ -60,10 +60,13 @@ class Board {
     func scanNeighbor(square: Square, mode: String) -> [Square] { //scan for existent neighbors
         var adjTiles: [(Int, Int)] = []
         var neighbors: [Square] = []
-        if (mode == "Eight") {
+        switch mode {
+        case "Eight" :
             adjTiles = [(-1, -1), (0, -1), (-1, 0), (1, 1), (1, 0), (0, 1), (-1, 1), (1, -1)]
-        } else if (mode == "Four") {
+        case "Four" :
             adjTiles = [(1,0), (-1,0), (0,1), (0,-1)]
+        default :
+            adjTiles = [(-1, -1), (0, -1), (-1, 0), (1, 1), (1, 0), (0, 1), (-1, 1), (1, -1)]
         }
         for (rowOffset, columnOffset) in adjTiles {
             let optionalNeighbor:Square? = getTile(square.row+rowOffset, column: square.column+columnOffset)
